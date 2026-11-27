@@ -1,0 +1,22 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile check
+        run: python -m py_compile app/auditor.py app/test_auditor.py
+      - name: Run tests
+        run: python -m pytest app/test_auditor.py -v
+      - name: Run CLI in demo mode
+        run: python -m app.auditor --demo --output reports/
+      - name: Show demo report
+        run: head -40 reports/report.md
